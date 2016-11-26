@@ -73,25 +73,29 @@ public class Main {
     }
 
     private static void sendPickEmail(String personPicked, String email) throws MessagingException {
-        String content = "Congratulations! You get to buy a stocking gift for " + personPicked + "! Aren't you lucky!";
-
-        Session getMailSession = Session.getDefaultInstance(props, null);
-        MimeMessage generateMailMessage = new MimeMessage(getMailSession);
-        generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-        generateMailMessage.setSubject("Christmas 2016 Stocking Pick");
-        generateMailMessage.setContent(content, "text/html");
-
-        Transport transport = getMailSession.getTransport("smtp");
-
         final boolean emailEnabled = Boolean.valueOf(System.getProperty("email.enabled"));
         if (emailEnabled) {
-            transport.connect(
-                    System.getProperty("email.server"),
-                    System.getProperty("email.username"),
-                    System.getProperty("email.password"));
-            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
-            transport.close();
-            System.out.println("Email sent to " + email + " saying that they got " + personPicked);
+            try {
+                String content = "Congratulations! You get to buy a stocking gift for " + personPicked + "! Aren't you lucky!";
+
+                Session getMailSession = Session.getDefaultInstance(props, null);
+                MimeMessage generateMailMessage = new MimeMessage(getMailSession);
+                generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+                generateMailMessage.setSubject("Christmas 2016 Stocking Pick");
+                generateMailMessage.setContent(content, "text/html");
+
+                Transport transport = getMailSession.getTransport("smtp");
+
+                transport.connect(
+                        System.getProperty("email.server"),
+                        System.getProperty("email.username"),
+                        System.getProperty("email.password"));
+                transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+                transport.close();
+                System.out.println("Email sent to " + email + " saying that they got " + personPicked);
+            } catch (Exception e) {
+                System.out.println("Exception encountered sending email to " + email + "! Cause: " + e.getMessage());
+            }
         }
     }
 
