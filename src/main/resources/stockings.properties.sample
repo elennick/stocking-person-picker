@@ -1,0 +1,7 @@
+email.enabled=true
+email.username=blah@gmail.com
+email.password=password
+email.server=smtp.gmail.com
+mail.smtp.port=587
+mail.smtp.auth=true
+mail.smtp.starttls.enable=true
